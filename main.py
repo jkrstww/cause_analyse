@@ -1,3 +1,5 @@
+import os
+
 import queryUtils
 from fileUtils import *
 from normalUtils import *
@@ -17,11 +19,11 @@ nodes = get_variables('./static/files/variables.txt')
 # print(candidate_edges)
 # print(merge_subgraph(nodes, candidate_edges))
 
-response = queryUtils.variables_to_graph(nodes, mode="direct")
-print(response)
-
-with open("test1.txt", 'w') as f:
-    f.write(response)
+# response = queryUtils.variables_to_graph(nodes, mode="direct")
+# print(response)
+#
+# with open("test1.txt", 'w') as f:
+#     f.write(response)
 
 
 # with open("test2.txt", 'w') as f:
@@ -32,3 +34,15 @@ with open("test1.txt", 'w') as f:
 #         print(round)
 #         round += 1
 # f.close()
+
+files = os.listdir("./static/files/reference")
+with open('test3.txt', 'w') as F:
+    for file in files:
+        path = "./static/files/reference/" + file
+        encoding = get_encoding(path)
+        with open(path, 'r', encoding=encoding) as f:
+            txt = f.readlines()
+            response = txt_to_graph(txt)
+            F.write(response)
+        f.close()
+F.close()

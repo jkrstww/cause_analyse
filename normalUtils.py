@@ -62,12 +62,14 @@ def write_json(file_path, write_path):
 
     for line in lines:
         line = line.strip()
-        if line.startswith("'"):
+        if line.startswith("'") or line.startswith('"'):
             edges.append(line[1:-2])
 
+    print(edges)
     # 创建父节点到子节点的映射字典
     node_map = {}
     for edge in edges:
+        print(edge)
         parent, child = edge.split('->')
         if parent not in node_map:
             node_map[parent] = []
@@ -85,5 +87,5 @@ def write_json(file_path, write_path):
         f.write(json.dumps(result, indent=2, ensure_ascii=False))
     f.close()
 
-write_json('test1.txt', 'test1_json.txt')
+write_json('test3.txt', 'test3_json.txt')
 

@@ -4,5 +4,8 @@
     <file url="file://$PROJECT_DIR$/test1.txt" charset="GBK" />
     <file url="file://$PROJECT_DIR$/test1_json.txt" charset="GBK" />
     <file url="file://$PROJECT_DIR$/test2.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test2_json.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3_json.txt" charset="GBK" />
   </component>
 </project>
