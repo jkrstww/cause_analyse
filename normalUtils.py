@@ -55,37 +55,57 @@ def get_encoding(file):
 def write_json(file_path, write_path):
     edges = []
     encoding = get_encoding(file_path)
+    node_map = {}
 
     with open(file_path, 'r', encoding=encoding) as f:
         lines = f.readlines()
     f.close()
 
-    for line in lines:
-        line = line.strip()
-        if line.startswith("'") or line.startswith('"'):
-            edges.append(line[1:-2])
-
-    print(edges)
-    # 创建父节点到子节点的映射字典
-    node_map = {}
-    for edge in edges:
-        print(edge)
-        parent, child = edge.split('->')
-        if parent not in node_map:
-            node_map[parent] = []
-        node_map[parent].append(child)
-
+    if file_path == "./static/files/base.txt":
+        for line in lines:
+            line = line.strip().split(',')
+            parent, child = line[0], line[1]
+            if child not in node_map:
+                node_map[child] = []
+            node_map[child].append(parent)
+    else:
+        for line in lines:
+            line = line.strip()
+            if line.startswith("'") or line.startswith('"'):
+                edges.append(line[1:-2])
+                for edge in edges:
+                    parent, child = edge.split('->')
+                    if parent not in node_map:
+                        node_map[child] = []
+                    node_map[child].append(parent)
     # 构建最终结果字典
     result = {}
-    for parent, children in node_map.items():
-        result[parent] = {
-            "name": parent,
-            "children": children
+    for child, parents in node_map.items():
+        result[child] = {
+            "name": child,
+            "parents": parents
         }
 
     with open(write_path, 'w') as f:
         f.write(json.dumps(result, indent=2, ensure_ascii=False))
     f.close()
 
-write_json('test3.txt', 'test3_json.txt')
+def write_variables(filePath, targetPath):
+    variables = set()
+    encoding = get_encoding(filePath)
+    with open(filePath, 'r', encoding=encoding) as F:
+        lines = F.readlines()
+        for line in lines:
+            line = line.strip().split(',')
+            head, tail = line[0], line[1]
+            variables.add(head)
+    F.close()
+
+    with open(targetPath, 'w') as f:
+        for variable in variables:
+            f.write(variable + '\n')
+    f.close()
+
+write_json("./static/files/base.txt", "./static/files/base.json")
+
 

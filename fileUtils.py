@@ -7,3 +7,4 @@ def get_variables(file_path):
             variable_set.add(variable)
 
     return list(variable_set)
+
