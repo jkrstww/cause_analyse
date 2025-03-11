@@ -87,5 +87,44 @@ def write_json(file_path, write_path):
         f.write(json.dumps(result, indent=2, ensure_ascii=False))
     f.close()
 
-write_json('test3.txt', 'test3_json.txt')
+def write_sql(file_path, write_path):
+    edges = []
+    encoding = get_encoding(file_path)
+
+    with open(file_path, 'r', encoding=encoding) as f:
+        lines = f.readlines()
+    f.close()
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("'") or line.startswith('"'):
+            edges.append(line[1:-2])
+
+    print(edges)
+    # 创建父节点到子节点的映射字典
+    node_map = {}
+    for edge in edges:
+        print(edge)
+        parent, child = edge.split('->')
+        if parent not in node_map:
+            node_map[parent] = []
+        node_map[parent].append(child)
+
+    # 构建最终结果字典
+    result = {}
+    for parent, children in node_map.items():
+        result[parent] = {
+            "name": parent,
+            "children": children
+        }
+
+    with open(write_path, 'a+') as f:
+        for edge in edges:
+            parent, child = edge.split('->')
+            insert_sql = f"INSERT INTO causal_graph(head, tail) VALUES({parent}, {child});\n"
+            print(insert_sql)
+            f.write(insert_sql)
+    f.close()
+
+write_sql('test3.txt', 'cause_graph.sql')
 
