@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+<<<<<<< HEAD
     <file url="file://$PROJECT_DIR$/cause_graph.sql" charset="GBK" />
+=======
+    <file url="file://$PROJECT_DIR$/static/files/base.json" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/static/files/variables.txt" charset="GBK" />
+>>>>>>> cb63f3fc24b8eaddca2d97f9d446659106ff8e37
     <file url="file://$PROJECT_DIR$/test1.txt" charset="GBK" />
     <file url="file://$PROJECT_DIR$/test1_json.txt" charset="GBK" />
     <file url="file://$PROJECT_DIR$/test2.txt" charset="GBK" />
