@@ -129,7 +129,7 @@ def write_sql(file_path, write_path):
             f.write(insert_sql)
     f.close()
 
-write_sql('test3.txt', 'cause_graph.sql')
+# write_sql('test3.txt', 'cause_graph.sql')
 
 def write_variables(filePath, targetPath):
     variables = set()
@@ -147,6 +147,12 @@ def write_variables(filePath, targetPath):
             f.write(variable + '\n')
     f.close()
 
-write_json("./static/files/base.txt", "./static/files/base.json")
+def list_to_str(list):
+    string = ""
+    for i in list:
+        string = string + i + ','
+    return string
+
+# write_json("./static/files/base.txt", "./static/files/base.json")
 
 
