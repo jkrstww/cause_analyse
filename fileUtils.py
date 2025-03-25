@@ -1,3 +1,4 @@
+from normalUtils import get_encoding
 def get_variables(file_path):
     variable_set = set()
 
