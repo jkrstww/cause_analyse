@@ -1,3 +1,5 @@
+import copy
+
 from normalUtils import get_encoding, match_tag
 import json
 from openai import OpenAI
@@ -15,7 +17,7 @@ class ToG():
         self.client = OpenAI(api_key="sk-9a9e275dad9d4e40b3aefc27bed0c27c", base_url="https://api.deepseek.com")
         self.question = ""
 
-    def get_edges(self, file_path="D:\cause_analyse\llamaProject\static\\files\\base.json"):
+    def get_edges(self, file_path="../static/files/base.json"):
         self.file_path = file_path
         encoding = get_encoding(self.file_path)
 
@@ -28,6 +30,7 @@ class ToG():
             self.variables.append(value["name"])
 
     def init_stage(self):
+        self.variables = list()
         prompt = f'''
         # 关键要素筛选指令
         **任务说明**：根据问题描述，从候选列表中选取最多{self.N}个最直接相关元素，需严格满足以下条件：
@@ -95,7 +98,6 @@ class ToG():
         response = match_tag(response, "Answer")
 
         self.init_nodes = ast.literal_eval(response)
-        print(type(self.init_nodes))
 
     def explore_state(self, temp_list):
         last_node = temp_list[-1]
@@ -103,7 +105,8 @@ class ToG():
             next_nodes = self.dict[last_node]
             for node in next_nodes:
                 temp_list.append(node)
-                self.explore_state(temp_list)
+                next_list = copy.deepcopy(next_nodes)
+                self.explore_state(next_list)
                 temp_list.pop(-1)
         else:
             self.reason_path.append(temp_list)
@@ -114,10 +117,8 @@ class ToG():
             从中选取最能够回答问题的一条思维链，结合该思维链以及你自己的思考，回答问题。
         '''
 
-        print(self.reason_path)
-
         response = self.client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-reasoner",
             messages=[
                 {"role": "user", "content": prompt},
             ],
@@ -140,10 +141,38 @@ class ToG():
 
         answer = self.beam_search()
         print(answer)
+        return answer
 
 
 
 if __name__ == "__main__":
     toG = ToG()
     toG.get_edges()
-    toG.get_answer("变压器出现火花放电，可能的根本原因是什么？")
+    print(toG.get_answer("外部线夹过热、声音异常、温度异常且变压器轻瓦斯动作"))
+
+    # encoding = get_encoding('../static/files/datasets/samples.json')
+    # with open('../static/files/datasets/samples.json', 'r', encoding=encoding) as f:
+    #     dict = json.load(f)
+    # f.close()
+    #
+    # output_dict = {}
+    # i = 1
+    # for key, value in dict.items():
+    #     symptom = value["故障表现"]
+    #     answer = toG.get_answer(symptom)
+    #     output_dict[symptom] = answer
+    #     print(i)
+    #     i += 1
+    #
+    # write_dict = {}
+    # i = 0
+    # for item in output_dict.items():
+    #     i += 1
+    #     write_dict[f"案例{i}"] = item
+    #
+    # print(write_dict)
+    #
+    # with open('./output.json', 'a+') as f:
+    #     f.write(json.dumps(write_dict))
+    # f.close()
+
